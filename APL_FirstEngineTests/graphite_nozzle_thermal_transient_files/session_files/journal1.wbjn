@@ -1,0 +1,149 @@
+# encoding: utf-8
+# Release 19.2
+SetScriptVersion(Version="19.2.120")
+DesignModeler.CreateGeometrySystemWithActiveCAD(
+    FilePath=r"C:\codeFiles\GitHub\personal-rocket-projects\APL_FirstEngineTests\APL1_graphiteInsert.SLDPRT",
+    PlugInName="SOLIDWORKS[21984]")
+template1 = GetTemplate(
+    TemplateName="Transient Thermal",
+    Solver="ANSYS")
+system1 = GetSystem(Name="Geometry")
+geometryComponent1 = system1.GetComponent(Name="Geometry")
+system2 = template1.CreateSystem(
+    ComponentsToShare=[geometryComponent1],
+    Position="Right",
+    RelativeTo=system1)
+modelComponent1 = system2.GetComponent(Name="Model")
+modelComponent1.Refresh()
+model1 = system2.GetContainer(ComponentName="Model")
+model1.Edit()
+engineeringData1 = system2.GetContainer(ComponentName="Engineering Data")
+matl1 = engineeringData1.CreateMaterial(Name="graphite")
+EngData.EnableFilter(Enable=False)
+EngData.EnableFilter()
+favorites1 = EngData.LoadFavoriteItems()
+library1 = EngData.OpenLibrary(
+    Name="Thermal Materials",
+    Source="Thermal_Materials.xml")
+matl2 = engineeringData1.ImportMaterial(
+    Name="Graphite",
+    Source="Thermal_Materials.xml")
+EngData.EnableFilter(Enable=False)
+EngData.EnableFilter()
+EngData.EnableFilter(Enable=False)
+EngData.EnableFilter()
+EngData.EnableFilter(Enable=False)
+matl1.Delete()
+matlProp1 = matl2.GetProperty(Name="Thermal Conductivity")
+matlProp1.SetData(
+    SheetName="Thermal Conductivity",
+    SheetQualifiers={"Definition": "", "Behavior": "Isotropic"},
+    Variables=["Thermal Conductivity"],
+    Values=[["83 [W m^-1 C^-1]"]])
+matlProp1.SetData(
+    SheetName="Thermal Conductivity",
+    SheetQualifiers={"Definition": "", "Behavior": "Isotropic"},
+    Variables=["Temperature"],
+    Values=[["23 [C]"]])
+Save(Overwrite=True)
+modelComponent1.Refresh()
+model1.Exit()
+model1.Edit()
+model1.Edit()
+engineeringDataComponent1 = system2.GetComponent(Name="Engineering Data")
+engineeringDataComponent1.Update(AllDependencies=True)
+geometry1 = system1.GetContainer(ComponentName="Geometry")
+geometry1.UpdateCAD()
+model1.Exit()
+modelComponent1.Reset()
+modelComponent1.Refresh()
+model1.Edit()
+model1.Exit()
+geometry1.UpdateCAD()
+model1.Edit()
+EngData.EnableFilter()
+EngData.EnableFilter(Enable=False)
+EngData.EnableFilter()
+matlProp2 = matl2.GetProperty(Name="Specific Heat")
+materialPropertyData1 = matlProp2.GetPropertyData(
+    Name="Specific Heat",
+    Qualifiers={"Definition": "Constant Pressure", "Behavior": ""})
+PropertyDataVariable1 = materialPropertyData1.CreateVariable(
+    Name="Coordinate X",
+    Qualifiers={"Field Variable": "Coordinate X", "Field Units": "m", "Default Data": "0", "Lower Limit": "Program Controlled", "Upper Limit": "Program Controlled"},
+    CustomData={"Independent": "True", "Quantity Type": "Length"})
+matlProp2.BeginBatchUpdate()
+matlProp2.DeleteData(
+    SheetName="Specific Heat",
+    SheetQualifiers={"Definition": "Constant Pressure", "Behavior": ""},
+    Index=0)
+matlProp2.EndBatchUpdate()
+EngData.EnableFilter(Enable=False)
+matlProp3 = matl2.CreateProperty(
+    Name="Specific Heat",
+    Definition="Constant Volume",
+    Qualifiers={"Definition": "Constant Volume", "Behavior": ""})
+matlProp3.Delete(Definition="Constant Pressure")
+matlProp3.SetData(
+    Index=-1,
+    Variables=["Specific Heat"],
+    Values=[["1900 [J kg^-1 C^-1]"]])
+EngData.EnableFilter()
+EngData.EnableFilter(Enable=False)
+EngData.EnableFilter()
+matlProp4 = matl2.CreateProperty(
+    Name="Specific Heat",
+    Definition="Constant Pressure",
+    Qualifiers={"Definition": "Constant Pressure", "Behavior": ""})
+matlProp4.SetData(
+    SheetName="Specific Heat",
+    SheetQualifiers={"Definition": "Constant Pressure", "Behavior": ""},
+    Index=-1,
+    Variables=["Specific Heat"],
+    Values=[["1900 [J kg^-1 C^-1]"]])
+matlProp4.SetData(
+    SheetName="Specific Heat",
+    SheetQualifiers={"Definition": "Constant Pressure", "Behavior": ""},
+    Variables=["Temperature"],
+    Values=[["23 [C]"]])
+model1.Exit()
+matlProp5 = matl2.CreateProperty(
+    Name="heat transfer",
+    Qualifiers={"UserMat": "USER"},
+    CustomData={})
+matlPropData1 = matlProp5.CreatePropertyData(
+    Name="Model Coefficients",
+    Definition="",
+    Behavior="",
+    Qualifiers={"UserMat": "USER"},
+    CustomData={})
+PropertyDataVariable2 = matlPropData1.CreateVariable(
+    Name="Temperature",
+    Qualifiers={"Display": "True"},
+    CustomData={"Quantity Type": None, "Data": "7.88860905221012E-31", "Independent": "True", "Units": "C"})
+PropertyDataVariable3 = matlPropData1.CreateVariable(
+    Name="chamber heat transfer",
+    Qualifiers={"Display": "True", "UserMat Constant": "1"},
+    CustomData={"Quantity Type": "Heat Transfer Coefficient", "Data": "3000", "Independent": "False", "Units": "W m^-2 K^-1"})
+matlProp6 = matl2.CreateProperty(
+    Name="heat transfer coefficient as f(x)",
+    Qualifiers={"UserMat": "USER"},
+    CustomData={})
+matlPropData2 = matlProp6.CreatePropertyData(
+    Name="Model State Variables",
+    Definition="",
+    Behavior="",
+    Qualifiers={"UserMat": "STATE"},
+    CustomData={})
+PropertyDataVariable4 = matlPropData2.CreateVariable(
+    Name="Hg",
+    Qualifiers={"Display": "True", "UserMat Constant": "1"},
+    CustomData={"Quantity Type": "Heat Transfer Coefficient", "Data": "3000", "Independent": "False", "Units": "W m^-2 K^-1"})
+materialPropertyData2 = matlProp1.GetPropertyData(
+    Name="Thermal Conductivity",
+    Qualifiers={"Definition": "", "Behavior": "Isotropic"})
+PropertyDataVariable5 = materialPropertyData2.CreateVariable(
+    Name="Coordinate X",
+    Qualifiers={"Field Variable": "Coordinate X", "Field Units": "m", "Default Data": "0", "Lower Limit": "Program Controlled", "Upper Limit": "Program Controlled"},
+    CustomData={"Independent": "True", "Quantity Type": "Length"})
+Save(Overwrite=True)
