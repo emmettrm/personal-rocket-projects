@@ -1,0 +1,114 @@
+("r_cham"+"wall thickness"-1+cos(arcsin(t-"l_cham")))*cos(t*pi*2*"cham_rot_per_in")
+-t
+"l_cham"
+"l_cham"+("r1"+"wall thickness")*sin("convergence angle")
+
+("r_cham"+"wall thickness"-1+cos(arcsin(t-"l_cham")))*cos(t/(("r1"+"wall thickness")*tan("cham_channel_angle")))
+
+("r_cham"+"wall thickness"-("r1"+"wall thickness")+("r1"+"wall thickness")*cos(arcsin((t-"l_cham")/("r1"+"wall thickness"))))*sin(t*pi*2*"cham_rot_per_in")
+
+(-t+"l_cham"+("r_cham"+"wall thickness")+("r1"+"wall thickness")*cos("convergence angle")+("r1"+"wall thickness")*sin("convergence angle")-("r1"+"wall thickness"))*sin(t*pi*2*"cham_rot_per_in")
+
+FROM DESMOS(2d parametric equations):
+from chamber to exit(x , y) --> (r , z)
+1: r_cham , t		(0<t<h)
+2: r_cham-r1+r1cos(arcsin((t-h)/r1))) , t		(h<t<h+r1sin(θ1))
+3: c_slope(-t+h+r1sin(θ1)) + r_cham + r1cos(θ1)-r1 , t		(h+r1sin(θ1) < t < h+r1sin(θ1)+y_del)
+4: r_thr-r2cos(arcsin((-t+h+r1sin(θ1)+y_del+r2sin(θ1))/r2))+r2 , t			(h+r1sin(θ1)+y_del < t < h+r1sin(θ1)+y_del+r2sin(θ1))
+5: r_thr-r3cos(arcsin((t-h-r1sin(θ1)-y_del-r2sin(θ1))/r3))+r3 , t			(h+r1sin(θ1)+y_del+r2sin(θ1) < t < h+r1sin(θ1)+y_del+r2sin(θ1)+r3sin(θ2))
+6: c_2slope(t-h-r1sin(θ1)-y_del-r2sin(θ1)-r3sin(θ2)) + r_thr-r3cos(θ2)+r3 , t	(h+r1sin(θ1)+y_del+r2sin(θ1)+r3sin(θ2) < t < h+r1sin(θ1)+y_del+r2sin(θ1)+r3sin(θ2)+ y_del2)
+c_slope=tan(θ1)
+c_2slope=tan(θ2)
+y_del = (-r1(1-cos(θ1))-r2(1-cos(θ1))-r_thr+r_cham)/c_slope
+y_del2 = (-r_thr+r_exit-r3+r3cos(θ2))/c_2slope
+
+DESMOS to SOLIDWORKS variable name conversions
+h = "l_cham"
+r_cham = ("r_cham"+"wall thickness")
+r_thr = ("r_throat"+"wall thickness")
+r_exit = ("r_exit"+"wall thickness")
+θ1 = "convergence angle"
+θ2 = "divergence angle"
+r1 = ("r1"+"wall thickness")
+r2 = ("r2"-"wall thickness")
+r3 = ("r3"-"wall thickness")
+"rot_per_in"
+
+adding theta:(r, θ, z)
+t2π"rot_per_in" for constant angle
+"rot_per_in" = 1 / ( ( "r_cham" + "wall thickness" ) * 2 * pi * tan ( "cham_channel_angle" ) )
+1: "r_cham", t2π"rot_per_in" , t		(0<t<h)
+
+converting (r, θ, z) to (x, y, z)
+x = rcosθ
+y = rsinθ
+z = z
+1:(desmos notation)
+x: r_cham*cos(t2π"rot_per_in")
+y: r_cham*sin(t2π"rot_per_in")
+z: -t
+(solidworks notation)
+x: ("r_cham"+"wall thickness") * cos(t*pi*2*"cham_rot_per_in")
+y: ("r_cham"+"wall thickness") * sin(t*pi*2*"cham_rot_per_in")
+z: -t
+
+2: 
+x: r_cham-r1+r1cos(arcsin((t-h)/r1))) * cos(t2π"rot_per_in")
+y: r_cham-r1+r1cos(arcsin((t-h)/r1))) * sin(t2π"rot_per_in")
+z: -t
+(h<t<h+r1sin(θ1))
+(solidworks notation)
+x: (("r_cham"+"wall thickness")-("r1"+"wall thickness")+("r1"+"wall thickness")*cos(arcsin((t-"l_cham")/("r1"+"wall thickness")))) * cos(t*pi*2*"cham_rot_per_in")
+y: (("r_cham"+"wall thickness")-("r1"+"wall thickness")+("r1"+"wall thickness")*cos(arcsin((t-"l_cham")/("r1"+"wall thickness")))) * sin(t*pi*2*"cham_rot_per_in")
+z: -t
+t1: "l_cham"
+t2: "l_cham"+("r1"+"wall thickness")*sin("convergence angle")
+
+3:
+x: (c_slope(-t+h+r1sin(θ1)) + r_cham + r1cos(θ1)-r1) * cos(t2π"rot_per_in")
+y: (c_slope(-t+h+r1sin(θ1)) + r_cham + r1cos(θ1)-r1) * sin(t2π"rot_per_in")
+z: -t
+(h+r1sin(θ1) < t < h+r1sin(θ1)+y_del)
+(solidworks notation)
+	(tan(θ1)*(-t+h+r1sin(θ1)) + r_cham + r1cos(θ1)-r1)
+x: (tan("convergence angle")*(-t+"l_cham"+("r1"+"wall thickness")*sin("convergence angle")) + ("r_cham"+"wall thickness") + ("r1"+"wall thickness")*cos("convergence angle")-("r1"+"wall thickness")) * cos(t*pi*2*"cham_rot_per_in")
+y: (tan("convergence angle")*(-t+"l_cham"+("r1"+"wall thickness")*sin("convergence angle")) + ("r_cham"+"wall thickness") + ("r1"+"wall thickness")*cos("convergence angle")-("r1"+"wall thickness")) * sin(t*pi*2*"cham_rot_per_in")
+z: -t
+t1: "l_cham"+("r1"+"wall thickness")*sin("convergence angle")
+t2: "l_cham"+("r1"+"wall thickness")*sin("convergence angle") + (-("r1"+"wall thickness")*(1-cos("convergence angle"))-("r2"+"wall thickness")*(1-cos("convergence angle"))-("r_throat"+"wall thickness")+("r_cham"+"wall thickness"))/tan("convergence angle")
+								(-r1(1-cos(θ1))-r2(1-cos(θ1))-r_thr+r_cham)/tan(θ1)
+4:
+x: (r_thr-r2cos(arcsin((-t+h+r1sin(θ1)+y_del+r2sin(θ1))/r2))+r2) * cos(t2π"rot_per_in")
+y: (r_thr-r2cos(arcsin((-t+h+r1sin(θ1)+y_del+r2sin(θ1))/r2))+r2) * sin(t2π"rot_per_in")
+z: -t
+(h+r1sin(θ1)+y_del < t < h+r1sin(θ1)+y_del+r2sin(θ1))
+(solidworks notation)
+x: (r_thr-r2cos(arcsin((-t+h+r1sin(θ1)+y_del+r2sin(θ1))/r2))+r2) * cos(t*pi*2*"cham_rot_per_in")
+y: (r_thr-r2cos(arcsin((-t+h+r1sin(θ1)+y_del+r2sin(θ1))/r2))+r2) * sin(t*pi*2*"cham_rot_per_in")
+z: -t
+t1: 
+t2: 
+
+5:
+x: (r_thr-r3cos(arcsin((t-h-r1sin(θ1)-y_del-r2sin(θ1))/r3))+r3) * cos(t2π"rot_per_in")
+y: (r_thr-r3cos(arcsin((t-h-r1sin(θ1)-y_del-r2sin(θ1))/r3))+r3) * sin(t2π"rot_per_in")
+z: -t
+(h+r1sin(θ1)+y_del+r2sin(θ1) < t < h+r1sin(θ1)+y_del+r2sin(θ1)+r3sin(θ2))
+(solidworks notation)
+x: (r_thr-r3cos(arcsin((t-h-r1sin(θ1)-y_del-r2sin(θ1))/r3))+r3) * cos(t*pi*2*"cham_rot_per_in")
+y: (r_thr-r3cos(arcsin((t-h-r1sin(θ1)-y_del-r2sin(θ1))/r3))+r3) * sin(t*pi*2*"cham_rot_per_in")
+z: -t
+t1: 
+t2: 
+
+6:
+x: (c_2slope(t-h-r1sin(θ1)-y_del-r2sin(θ1)-r3sin(θ2)) + r_thr-r3cos(θ2)+r3) * cos(t2π"rot_per_in")
+y: (c_2slope(t-h-r1sin(θ1)-y_del-r2sin(θ1)-r3sin(θ2)) + r_thr-r3cos(θ2)+r3) * sin(t2π"rot_per_in")
+z: -t
+(h+r1sin(θ1)+y_del+r2sin(θ1)+r3sin(θ2) < t < h+r1sin(θ1)+y_del+r2sin(θ1)+r3sin(θ2)+ y_del2)
+(solidworks notation)
+x: (c_2slope(t-h-r1sin(θ1)-y_del-r2sin(θ1)-r3sin(θ2)) + r_thr-r3cos(θ2)+r3) * cos(t*pi*2*"cham_rot_per_in")
+y: (c_2slope(t-h-r1sin(θ1)-y_del-r2sin(θ1)-r3sin(θ2)) + r_thr-r3cos(θ2)+r3) * sin(t*pi*2*"cham_rot_per_in")
+z: -t
+t1: 
+t2: 
