@@ -32,6 +32,12 @@ r_exit = ("r_exit"+"wall thickness")
 r1 = ("r1"+"wall thickness")
 r2 = ("r2"-"wall thickness")
 r3 = ("r3"-"wall thickness")
+c_slope = tan("convergence angle")
+c_slope2 = tan("divergence angle")
+x_del = -("r1"+"wall thickness")*(1-cos("convergence angle"))-("r2"-"wall thickness")*(1-cos("convergence angle"))-("r_throat"+"wall thickness")+("r_cham"+"wall thickness")
+x_del2 = -("r_throat"+"wall thickness")+("r3"-"wall thickness")*cos("divergence angle")-("r3"-"wall thickness")+("r_exit"+"wall thickness")
+y_del = (-("r1"+"wall thickness")*(1-cos("convergence angle"))-("r2"-"wall thickness")*(1-cos("convergence angle"))-("r_throat"+"wall thickness")+("r_cham"+"wall thickness"))/tan("convergence angle")
+y_del2 = (-("r_throat"+"wall thickness")+("r3"-"wall thickness")*cos("divergence angle")-("r3"-"wall thickness")+("r_exit"+"wall thickness"))/tan("divergence angle")
 "rot_per_in"
 
 adding theta:(r, θ, z)
@@ -53,13 +59,13 @@ y: ("r_cham"+"wall thickness") * sin(t*pi*2*"cham_rot_per_in")
 z: -t
 
 2: 
-x: r_cham-r1+r1cos(arcsin((t-h)/r1))) * cos(t2π"rot_per_in")
-y: r_cham-r1+r1cos(arcsin((t-h)/r1))) * sin(t2π"rot_per_in")
+x: r_cham-r1+r1cos(arcsin((t-h)/r1))) * cos(t/("r_cham"*tan("cham_channel_angle")))
+y: r_cham-r1+r1cos(arcsin((t-h)/r1))) * sin(t/("r_cham"*tan("cham_channel_angle")))
 z: -t
 (h<t<h+r1sin(θ1))
 (solidworks notation)
-x: (("r_cham"+"wall thickness")-("r1"+"wall thickness")+("r1"+"wall thickness")*cos(arcsin((t-"l_cham")/("r1"+"wall thickness")))) * cos(t*pi*2*"cham_rot_per_in")
-y: (("r_cham"+"wall thickness")-("r1"+"wall thickness")+("r1"+"wall thickness")*cos(arcsin((t-"l_cham")/("r1"+"wall thickness")))) * sin(t*pi*2*"cham_rot_per_in")
+x: (("r_cham"+"wall thickness")-("r1"+"wall thickness")+("r1"+"wall thickness")*cos(arcsin((t-"l_cham")/("r1"+"wall thickness")))) * cos(t/("r_cham"*tan("cham_channel_angle")))
+y: (("r_cham"+"wall thickness")-("r1"+"wall thickness")+("r1"+"wall thickness")*cos(arcsin((t-"l_cham")/("r1"+"wall thickness")))) * sin(t/("r_cham"*tan("cham_chan_angle)))
 z: -t
 t1: "l_cham"
 t2: "l_cham"+("r1"+"wall thickness")*sin("convergence angle")
@@ -71,23 +77,23 @@ z: -t
 (h+r1sin(θ1) < t < h+r1sin(θ1)+y_del)
 (solidworks notation)
 	(tan(θ1)*(-t+h+r1sin(θ1)) + r_cham + r1cos(θ1)-r1)
-x: (tan("convergence angle")*(-t+"l_cham"+("r1"+"wall thickness")*sin("convergence angle")) + ("r_cham"+"wall thickness") + ("r1"+"wall thickness")*cos("convergence angle")-("r1"+"wall thickness")) * cos(t*pi*2*"cham_rot_per_in")
-y: (tan("convergence angle")*(-t+"l_cham"+("r1"+"wall thickness")*sin("convergence angle")) + ("r_cham"+"wall thickness") + ("r1"+"wall thickness")*cos("convergence angle")-("r1"+"wall thickness")) * sin(t*pi*2*"cham_rot_per_in")
+x: (tan("convergence angle")*(-t+"l_cham"+("r1"+"wall thickness")*sin("convergence angle")) + ("r_cham"+"wall thickness") + ("r1"+"wall thickness")*cos("convergence angle")-("r1"+"wall thickness")) * cos(t/("r_cham"*tan("cham_channel_angle")))
+y: (tan("convergence angle")*(-t+"l_cham"+("r1"+"wall thickness")*sin("convergence angle")) + ("r_cham"+"wall thickness") + ("r1"+"wall thickness")*cos("convergence angle")-("r1"+"wall thickness")) * sin(t/("r_cham"*tan("cham_channel_angle")))
 z: -t
 t1: "l_cham"+("r1"+"wall thickness")*sin("convergence angle")
 t2: "l_cham"+("r1"+"wall thickness")*sin("convergence angle") + (-("r1"+"wall thickness")*(1-cos("convergence angle"))-("r2"+"wall thickness")*(1-cos("convergence angle"))-("r_throat"+"wall thickness")+("r_cham"+"wall thickness"))/tan("convergence angle")
 								(-r1(1-cos(θ1))-r2(1-cos(θ1))-r_thr+r_cham)/tan(θ1)
 4:
-x: (r_thr-r2cos(arcsin((-t+h+r1sin(θ1)+y_del+r2sin(θ1))/r2))+r2) * cos(t2π"rot_per_in")
+x: (("r_throat"+"wall thickness")-r2cos(arcsin((-t+h+r1sin(θ1)+y_del+r2sin(θ1))/r2))+r2) * cos(t2π"rot_per_in")
 y: (r_thr-r2cos(arcsin((-t+h+r1sin(θ1)+y_del+r2sin(θ1))/r2))+r2) * sin(t2π"rot_per_in")
 z: -t
 (h+r1sin(θ1)+y_del < t < h+r1sin(θ1)+y_del+r2sin(θ1))
 (solidworks notation)
-x: (r_thr-r2cos(arcsin((-t+h+r1sin(θ1)+y_del+r2sin(θ1))/r2))+r2) * cos(t*pi*2*"cham_rot_per_in")
+x: (("r_throat"+"wall thickness")-("r2"-"wall thickness")*cos(arcsin((-t+"l_cham"+("r1"+"wall thickness")*sin("convergence angle")+(-("r1"+"wall thickness")*(1-cos("convergence angle"))-("r2"-"wall thickness")*(1-cos("convergence angle"))-("r_throat"+"wall thickness")+("r_cham"+"wall thickness"))/tan("convergence angle")+("r2"-"wall thickness")*sin("convergence angle"))/("r2"-"wall thickness")))+("r2"-"wall thickness")) * cos(t/("r_cham"*tan("cham_channel_angle")))
 y: (r_thr-r2cos(arcsin((-t+h+r1sin(θ1)+y_del+r2sin(θ1))/r2))+r2) * sin(t*pi*2*"cham_rot_per_in")
 z: -t
-t1: 
-t2: 
+t1: "l_cham"+("r1"+"wall thickness")*sin("convergence angle") + (-("r1"+"wall thickness")*(1-cos("convergence angle"))-("r2"+"wall thickness")*(1-cos("convergence angle"))-("r_throat"+"wall thickness")+("r_cham"+"wall thickness"))/tan("convergence angle")
+t2: "l_cham"+("r1"+"wall thickness")*sin("convergence angle") + (-("r1"+"wall thickness")*(1-cos("convergence angle"))-("r2"+"wall thickness")*(1-cos("convergence angle"))-("r_throat"+"wall thickness")+("r_cham"+"wall thickness"))/tan("convergence angle")+("r2"-"wall thickness")*sin("convergence angle")
 
 5:
 x: (r_thr-r3cos(arcsin((t-h-r1sin(θ1)-y_del-r2sin(θ1))/r3))+r3) * cos(t2π"rot_per_in")
@@ -98,8 +104,8 @@ z: -t
 x: (r_thr-r3cos(arcsin((t-h-r1sin(θ1)-y_del-r2sin(θ1))/r3))+r3) * cos(t*pi*2*"cham_rot_per_in")
 y: (r_thr-r3cos(arcsin((t-h-r1sin(θ1)-y_del-r2sin(θ1))/r3))+r3) * sin(t*pi*2*"cham_rot_per_in")
 z: -t
-t1: 
-t2: 
+t1: "l_cham"+("r1"+"wall thickness")*sin("convergence angle") + (-("r1"+"wall thickness")*(1-cos("convergence angle"))-("r2"+"wall thickness")*(1-cos("convergence angle"))-("r_throat"+"wall thickness")+("r_cham"+"wall thickness"))/tan("convergence angle")+("r2"-"wall thickness")*sin("convergence angle")
+t2: "l_cham"+("r1"+"wall thickness")*sin("convergence angle") + (-("r1"+"wall thickness")*(1-cos("convergence angle"))-("r2"+"wall thickness")*(1-cos("convergence angle"))-("r_throat"+"wall thickness")+("r_cham"+"wall thickness"))/tan("convergence angle")+("r2"-"wall thickness")*sin("convergence angle")+("r3"-"wall thickness")*sin("divergence angle")
 
 6:
 x: (c_2slope(t-h-r1sin(θ1)-y_del-r2sin(θ1)-r3sin(θ2)) + r_thr-r3cos(θ2)+r3) * cos(t2π"rot_per_in")
@@ -110,5 +116,5 @@ z: -t
 x: (c_2slope(t-h-r1sin(θ1)-y_del-r2sin(θ1)-r3sin(θ2)) + r_thr-r3cos(θ2)+r3) * cos(t*pi*2*"cham_rot_per_in")
 y: (c_2slope(t-h-r1sin(θ1)-y_del-r2sin(θ1)-r3sin(θ2)) + r_thr-r3cos(θ2)+r3) * sin(t*pi*2*"cham_rot_per_in")
 z: -t
-t1: 
-t2: 
+t1: "l_cham"+("r1"+"wall thickness")*sin("convergence angle") + (-("r1"+"wall thickness")*(1-cos("convergence angle"))-("r2"+"wall thickness")*(1-cos("convergence angle"))-("r_throat"+"wall thickness")+("r_cham"+"wall thickness"))/tan("convergence angle")+("r2"-"wall thickness")*sin("convergence angle")+("r3"-"wall thickness")*sin("divergence angle")
+t2: "l_cham"+("r1"+"wall thickness")*sin("convergence angle") + (-("r1"+"wall thickness")*(1-cos("convergence angle"))-("r2"+"wall thickness")*(1-cos("convergence angle"))-("r_throat"+"wall thickness")+("r_cham"+"wall thickness"))/tan("convergence angle")+("r2"-"wall thickness")*sin("convergence angle")+("r3"-"wall thickness")*sin("divergence angle")+(-("r_throat"+"wall thickness")+("r3"-"wall thickness")*cos("divergence angle")-("r3"-"wall thickness")+("r_exit"+"wall thickness"))/tan("divergence angle")
